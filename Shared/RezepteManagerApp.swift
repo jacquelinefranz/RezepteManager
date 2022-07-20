@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
+let appName = "Rezepte Manager"
 
 @main
 struct RezepteManagerApp: App {
     let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            
+            NavigationView {
+                Sidebar()
+                Home()
+                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            }
         }
     }
 }
