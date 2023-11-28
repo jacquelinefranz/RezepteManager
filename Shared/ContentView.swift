@@ -12,3 +12,7 @@ struct ContentView: View {
         Text("Placeholder")
     }
 }
+
+#Preview {
+    ContentView()
+}
