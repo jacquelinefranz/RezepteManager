@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var path = [Recipe]()
     
     var body: some View {
-        NavigationStack{
-            RecipeList()
+        NavigationStack(path: $path){
+            RecipeList(path: $path)
         }
         .navigationTitle("Recipes")
     }

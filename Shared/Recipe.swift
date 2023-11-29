@@ -11,7 +11,7 @@ import SwiftData
 class Recipe {
     var title: String
     var headerImage: String?
-    var isFavorite: Bool
+    var isFavorite: Bool = false
     var author: String?
 //    var cookingTime: ...
 //    var difficultyLevel: Enum
@@ -24,11 +24,9 @@ class Recipe {
     
     //MARK: - Init Methods
     init(
-        title: String = "Untitled",
-        isFavorite: Bool = false
+        title: String = "Untitled"
     ){
         self.title = title
-        self.isFavorite = isFavorite
     }
     
     init(

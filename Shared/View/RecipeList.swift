@@ -12,20 +12,35 @@ struct RecipeList: View {
     //MARK: - View Propertys
     @Environment(\.modelContext) private var modelContext
     @Query private var recipes: [Recipe]
-    //Edit Sheet ispresentet
-    //noch ein Sheet für Erstellen einbringen
+    @Binding var path: [Recipe]
+    @State private var isCreatingNewRecipe = false
+    @State private var lastCreatedRecipe: Recipe?
+    
+    
     
     //MARK: - Body
     var body: some View {
         List {
             ForEach(recipes) { recipe in
-                NavigationLink(destination: RecipeDetail(recipe: recipe)) {
+                NavigationLink(value: recipe) {
                     Row(recipe: recipe)
                 }
             }
         }
         .navigationTitle("Recipes")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: Recipe.self) { recipe in
+            if isCreatingNewRecipe && recipe == lastCreatedRecipe {
+                EditRecipe(recipe: recipe)
+            } else {
+                RecipeDetail(recipe: recipe)
+            }
+        }
+        .onChange(of: path) {
+                    if path.last != lastCreatedRecipe {
+                        isCreatingNewRecipe = false
+                    }
+                }
         // MARK: -- Toolbar
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -34,9 +49,10 @@ struct RecipeList: View {
                 }
             }
             ToolbarItem {
-                Button("New Recipe", systemImage: "note.text.badge.plus") { addNewRecipe() }
+                Button("New Recipe", systemImage: "note.text.badge.plus", action: addNewRecipe )
             }
         }
+        
     } // END: Body
     
     // MARK: - View Components
@@ -53,12 +69,16 @@ struct RecipeList: View {
     
     // MARK: - View Methods
     func addNewRecipe (){
-        modelContext.insert(Recipe(title: "Untitled", isFavorite: false))
+        let newRecipe = Recipe(title: "")
+        modelContext.insert(newRecipe)
+        lastCreatedRecipe = newRecipe
+        path = [newRecipe]
+        isCreatingNewRecipe = true
     }
 }
 
 #Preview {
     NavigationStack{
-        RecipeList()
+        RecipeList(path: Binding.constant([Recipe]()))
     }
 }
